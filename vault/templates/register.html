@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+        <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body>
+    <nav>
+        <div class="nav-wrapper blue-grey">
+            <a href="#" class="brand-logo center">The Vault</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="/">Home</a></li>
+                <li><a href="/register">Register</a></li>
+                <li><a href="/login">Login</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div id="container" class="center" style="margin: 50px">
+        <form action="" method="POST" class="form-inline">
+        {{ form.csrf }}
+            <input name="realname" id="name_input" class="form_control" placeholder="Real Name">
+            <input name="username" id="username_input" class="form_control" placeholder="Username">
+            <input name="password" id="password_input" type="password" class="form_control" placeholder="Password">
+            <input name="repassword" id="repassword_input" type="password" class="form_control" placeholder="Re-enter Password">
+            <input name="accesscode" id="code_input" type="password" class="form_control" placeholder="Access Code">
+
+            <button style="margin: 10px" name="submit" type="submit" class="btn btn-primary">Register</button>
+        </form>
+
+        <p>Already a member? Please <a href="/login">log in</a>.</p>
+    </div>
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
