@@ -30,18 +30,26 @@ def validate_accesscode(form, field):
 
 
 class RegisterForm(FlaskForm):
-    realname = StringField('realname', validators=[DataRequired()])
-    username = StringField('username', validators=[DataRequired()])
-    password = PasswordField('password', validators=[DataRequired()])
-    password2 = PasswordField('<PASSWORD>', validators=[DataRequired(), EqualTo('password')])
-    accesscode = StringField('accesscode', validators=[DataRequired(), validate_accesscode])
+    realname = StringField('realname', validators=[DataRequired("Real Name is required.")])
+    username = StringField('username', validators=[DataRequired("Username is required.")])
+    password = PasswordField('password', validators=[DataRequired("Password is required.")])
+    repassword = PasswordField('repassword', validators=[DataRequired("Re-enter Password is required."), EqualTo('password', "Passwords must match")])
+    accesscode = StringField('accesscode', validators=[DataRequired("Access Code is required."), validate_accesscode])
     submit = SubmitField('register')
 
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
+
+    if session.get("username", None) is not None:
+        return redirect(url_for("welcome"))
+
     if form.is_submitted():
+        if not form.validate():
+            form_errors = form.errors.values()
+            return render_template("register.html", form=form, form_errors=form_errors)
+
         realname = form.realname.data
         username = form.username.data
         password = form.password.data
@@ -50,13 +58,17 @@ def register():
         users[username] = new_user
         return redirect(url_for('login'))
     else:
-        return render_template("register.html", form=form)
+        return render_template("register.html", form=form, form_errors=[])
 
 
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     form = LoginForm()
-    if form.is_submitted():
+
+    if session.get("username", None) is not None:
+        return redirect(url_for("welcome"))
+
+    if form.is_submitted() and form.validate():
         username = form.username.data
         password = form.password.data
         user_info = users.get(username, None)
@@ -66,7 +78,7 @@ def login():
             return redirect(url_for("welcome"))
         else:
             print("Login failed!")
-            return render_template("login.html",  form=form)
+            return render_template("login.html", form=form, error="Invalid username or password")
     else:
         return render_template("login.html", form=form)
 
@@ -75,9 +87,10 @@ def login():
 def welcome():
     username = session.get("username", None)
     if username is not None:
-        return render_template("welcome.html", realname=users[username].realname)
+        return render_template("welcome.html", realname=users[username].realname, logged_in=True)
     else:
         return redirect(url_for("login"))
+
 
 @app.route("/logout")
 def logout():

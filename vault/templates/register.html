@@ -16,20 +16,31 @@
             <a href="#" class="brand-logo center">The Vault</a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <li><a href="/">Home</a></li>
+                {% if not logged_in %}
                 <li><a href="/register">Register</a></li>
                 <li><a href="/login">Login</a></li>
+                {% endif %}
+                {% if logged_in %}
+                <li><a href="/logout">Log Out</a></li>
+                {% endif %}
             </ul>
         </div>
     </nav>
 
     <div id="container" class="center" style="margin: 50px">
+        {% for error_message in form_errors %}
+        <div class="red" style="padding: 2px; color: white; border-radius: 10px; margin: 5px 20px">
+            <p>{{ error_message[0] }}</p>
+        </div>
+        {% endfor %}
+
         <form action="" method="POST" class="form-inline">
-        {{ form.csrf }}
+        {{ form.csrf_token }}
             <input name="realname" id="name_input" class="form_control" placeholder="Real Name">
             <input name="username" id="username_input" class="form_control" placeholder="Username">
             <input name="password" id="password_input" type="password" class="form_control" placeholder="Password">
             <input name="repassword" id="repassword_input" type="password" class="form_control" placeholder="Re-enter Password">
-            <input name="accesscode" id="code_input" type="password" class="form_control" placeholder="Access Code">
+            <input name="accesscode" id="accesscode_input" type="password" class="form_control" placeholder="Access Code">
 
             <button style="margin: 10px" name="submit" type="submit" class="btn btn-primary">Register</button>
         </form>
